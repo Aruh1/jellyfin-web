@@ -319,6 +319,7 @@ export default function () {
             context.querySelector('.remoteControlSection').classList.add('hide');
         }
 
+        buttonVisible(context.querySelector('.btnLyrics'), item.Type === 'Audio');
         buttonVisible(context.querySelector('.btnStop'), item != null);
         buttonVisible(context.querySelector('.btnNextTrack'), item != null);
         buttonVisible(context.querySelector('.btnPreviousTrack'), item != null);
@@ -753,6 +754,9 @@ export default function () {
             if (currentPlayer) {
                 playbackManager.fastForward(currentPlayer);
             }
+        });
+        context.querySelector('.btnLyrics').addEventListener('click', function () {
+            appRouter.show('Lyrics');
         });
         for (const shuffleButton of context.querySelectorAll('.btnShuffleQueue')) {
             shuffleButton.addEventListener('click', function () {

@@ -24,6 +24,7 @@ import globalize from '../../scripts/globalize';
 import browser from '../../scripts/browser';
 import { playbackManager } from '../../components/playback/playbackmanager';
 import '../../styles/scrollstyles.scss';
+import '../../styles/lyrics.scss';
 import '../../elements/emby-itemscontainer/emby-itemscontainer';
 import '../../elements/emby-checkbox/emby-checkbox';
 import '../../elements/emby-button/emby-button';
@@ -1066,6 +1067,7 @@ function renderDetails(page, item, apiClient, context) {
     renderSimilarItems(page, item, context);
     renderMoreFromSeason(page, item, apiClient);
     renderMoreFromArtist(page, item, apiClient);
+    renderMoreFromAlbum(page, item, apiClient);
     renderDirector(page, item, context);
     renderStudio(page, item, context);
     renderWriter(page, item, context);
@@ -1075,6 +1077,7 @@ function renderDetails(page, item, apiClient, context) {
     renderOverview(page, item);
     renderMiscInfo(page, item);
     reloadUserDataButtons(page, item);
+    renderLyricsContainer(page, item, apiClient);
 
     // Don't allow redirection to other websites from the TV layout
     if (!layoutManager.tv && appHost.supports('externallinks')) {
@@ -1103,6 +1106,37 @@ function getSquareShape(scrollX) {
     }
 
     return scrollX ? 'overflowSquare' : 'square';
+}
+
+function renderLyricsContainer(view, item, apiClient) {
+    const lyricContainer = view.querySelector('.lyricsContainer');
+    if (lyricContainer && item.HasLyrics) {
+        if (item.Type !== 'Audio') {
+            lyricContainer.classList.add('hide');
+            return;
+        }
+        //get lyrics
+        const userId = apiClient.getCurrentUserId();
+        apiClient.ajax({
+            url: apiClient.getUrl('Users/' + userId + '/Items/' + item.Id + '/Lyrics'),
+            type: 'GET'
+        }).then(response => response.json())
+            .then((json) => {
+                if (!json.Lyrics) {
+                    lyricContainer.classList.add('hide');
+                    return;
+                }
+                lyricContainer.classList.remove('hide');
+                const itemsContainer = lyricContainer.querySelector('.itemsContainer');
+                if (itemsContainer) {
+                    const html = json.Lyrics.reduce((htmlAccumulator, lyric) => {
+                        htmlAccumulator += lyric.Text + '<br/>';
+                        return htmlAccumulator;
+                    }, '');
+                    itemsContainer.innerHTML = html;
+                }
+            });
+    }
 }
 
 function renderMoreFromSeason(view, item, apiClient) {

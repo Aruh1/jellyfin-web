@@ -314,6 +314,14 @@ export function getCommands(options) {
         });
     }
 
+    if (item.HasLyrics) {
+        commands.push({
+            name: globalize.translate('ViewLyrics'),
+            id: 'lyrics',
+            icon: 'lyrics'
+        });
+    }
+
     return commands;
 }
 
@@ -508,6 +516,10 @@ function executeCommand(item, id, options) {
                 break;
             case 'artist':
                 appRouter.showItem(item.AlbumArtists[0].Id, item.ServerId);
+                getResolveFunction(resolve, id)();
+                break;
+            case 'lyrics': 
+                appRouter.showItem(item.Id, item.ServerId);
                 getResolveFunction(resolve, id)();
                 break;
             case 'playallfromhere':
