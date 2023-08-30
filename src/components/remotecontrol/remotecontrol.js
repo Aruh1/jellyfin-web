@@ -758,6 +758,7 @@ export default function () {
         context.querySelector('.btnLyrics').addEventListener('click', function () {
             appRouter.show('Lyrics');
         });
+
         for (const shuffleButton of context.querySelectorAll('.btnShuffleQueue')) {
             shuffleButton.addEventListener('click', function () {
                 if (currentPlayer) {

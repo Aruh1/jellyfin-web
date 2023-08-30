@@ -518,10 +518,11 @@ function executeCommand(item, id, options) {
                 appRouter.showItem(item.AlbumArtists[0].Id, item.ServerId);
                 getResolveFunction(resolve, id)();
                 break;
-            case 'lyrics': 
+            case 'lyrics': {
                 appRouter.showItem(item.Id, item.ServerId);
                 getResolveFunction(resolve, id)();
                 break;
+            }
             case 'playallfromhere':
                 getResolveFunction(resolve, id)();
                 break;
